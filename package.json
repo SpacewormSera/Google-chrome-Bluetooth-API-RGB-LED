@@ -10,8 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ascii-decimal": "^1.0.0",
     "bluetooth-terminal": "^1.4.1",
-    "noble": "^1.9.1"
+    "noble": "^1.9.1",
+    "node-ble": "^1.2.0",
+    "node-web-bluetooth": "^1.1.0"
   },
   "devDependencies": {
     "eslint": "^7.3.1",
