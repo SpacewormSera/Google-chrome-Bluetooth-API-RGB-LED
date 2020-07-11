@@ -17,8 +17,6 @@ const hexToRgb = (hex) => {
   return [r, g, b];
 };
 
-// const data = new Uint8Array([1, ...hexToRgb(colourPicker.value)]);
-
 /*===========================  ASCII  ========================================*/
 const data1 = new Uint8Array([69, 76, 66, 82, 85, 83]); // elbrus
 const data2 = new Uint8Array([83, 69, 82, 65]); // sera
@@ -45,10 +43,7 @@ let options = {
   optionalServices: ['6e400001-b5a3-f393-e0a9-e50e24dcca9e']
 }
 
-
 connectButton.onclick = async () => {
-  // console.log(data);
-
   device = await navigator.bluetooth.requestDevice(options);
   console.log('connected');
 }
