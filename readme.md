@@ -1,7 +1,8 @@
 Simple bluetooth beacon example using web bluetooth api.
 Made for ESP32 board
 
-
+TODO
+Add a RGB-LED PWM code to esp32 board and color picker to the web page 
 
 Articles used: 
 
