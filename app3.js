@@ -1,67 +1,65 @@
-const btn1 = document.getElementById('btn1');
-const btn2 = document.getElementById('btn2');
-const btn3 = document.getElementById('btn3');
-const btn4 = document.getElementById('btn4');
-const connectButton = document.getElementById('scan');
+const connectButton = document.getElementById('scan')
 
-const primaryServiceUuid = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
-const receiveCharUuid = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
-const sendCharUuid = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
-let device, sendCharacteristic, receiveCharacteristic;
+const primaryServiceUuid = '6e400001-b5a3-f393-e0a9-e50e24dcca9e'
+const receiveCharUuid = '6e400001-b5a3-f393-e0a9-e50e24dcca9e'
+const sendCharUuid = '6e400002-b5a3-f393-e0a9-e50e24dcca9e'
 
-const hexToRgb = (hex) => {
-  const r = parseInt(hex.substring(1, 3), 16);
-  const g = parseInt(hex.substring(3, 5), 16);
-  const b = parseInt(hex.substring(5, 7), 16);
+let device = null
 
-  return [r, g, b];
+function hexToRgb(hex) {
+  const r = parseInt(hex.substring(1, 3), 16)
+  const g = parseInt(hex.substring(3, 5), 16)
+  const b = parseInt(hex.substring(5, 7), 16)
+
+  return [r, g, b]
 };
-
-/*===========================  ASCII  ========================================*/
-const data1 = new Uint8Array([69, 76, 66, 82, 85, 83]); // elbrus
-const data2 = new Uint8Array([83, 69, 82, 65]); // sera
-
-
-document.body.addEventListener('click', (event) => {
-  if (event.target.id === 'btn1') {
-
-    console.log('btn1 click');
-  } else if (event.target.id === 'btn2') {
-
-  } else if (event.target.id === 'btn3') {
-
-  } else if (event.target.id === 'btn4') {
-
-  }
-
-});
 
 let options = {
   filters: [
-    { name: 'UART Service' },
+    { name: 'UART Service' }, // name should match the esp32 device BLE name
   ],
   optionalServices: ['6e400001-b5a3-f393-e0a9-e50e24dcca9e']
 }
 
 connectButton.onclick = async () => {
-  device = await navigator.bluetooth.requestDevice(options);
-  console.log('connected');
+  device = await navigator.bluetooth.requestDevice(options)
+  const element = document.getElementById('output')
+  element.innerHTML = '---> connected to: ' + device.name
 }
 
-btn1.onclick = async () => {
+async function sendDataToBle(data) {
   const server = await device.gatt.connect();
   const service = await server.getPrimaryService(primaryServiceUuid);
-  console.log(service);
-  // receiveCharacteristic = await service.getCharacteristic(receiveCharUuid);
-  sendCharacteristic = await service.getCharacteristic(sendCharUuid);
-  sendCharacteristic.writeValue(data1);
+
+  const buffer = Uint8Array.from(data)
+  const sendCharacteristic = await service.getCharacteristic(sendCharUuid);
+  sendCharacteristic.writeValue(buffer);
 }
 
-btn2.onclick = async () => {
-  const server = await device.gatt.connect();
-  const service = await server.getPrimaryService(primaryServiceUuid);
-  console.log(service);
-  // receiveCharacteristic = await service.getCharacteristic(receiveCharUuid);
-  sendCharacteristic = await service.getCharacteristic(sendCharUuid);
-  sendCharacteristic.writeValue(data2);
+async function sendString() {
+  const inputElement = document.getElementById('input')
+  const inputData = inputElement.value
+  const element = document.getElementById('output')
+
+  if (!device) {
+    element.innerText = 'Connect to the BLE device before sending any data'
+    return
+  }
+
+  element.innerText += `${new Date().toLocaleString(undefined, {
+    hour: '2-digit',
+    hour12: false,
+    minute: '2-digit',
+    second: '2-digit'
+  })}---> ${inputData} \n`
+
+  sendDataToBle(inputData)
+
+  inputElement.value = ''
+}
+
+async function sendColorData() {
+  const colorPicker = document.getElementById('colorPicker')
+  const colorData = hexToRgb(colorPicker.value)
+  sendDataToBle(colorData)
 }

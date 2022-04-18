@@ -43,10 +43,12 @@ uint8_t txValue = 0;
 
 // setting PWM properties
 const int freq = 5000;
-const int ledRedChannel = 0;
-const int ledGreenChannel = 1;
-const int ledBlueChannel = 2;
+const int redChannel = 3;
+const int greenChannel = 1;
+const int blueChannel = 2;
 const int resolution = 8;
+
+uint8_t R, G, B;
 
 
 class MyServerCallbacks: public BLEServerCallbacks {
@@ -66,17 +68,16 @@ class MyCallbacks: public BLECharacteristicCallbacks {
       if (rxValue.length() > 0) {
         Serial.println("*********");
         Serial.print("Received Value: ");
-        for (int i = 0; i < rxValue.length(); i++)
-        {
-          Serial.print(rxValue[i]);
-          
-          // replace 255 with actual values from browser
-          ledcWrite(ledRedChannel, 127);
-          ledcWrite(ledGreenChannel, 127);
-          ledcWrite(ledBlueChannel, 127);
-        }
+        Serial.print(rxValue[0], DEC);
+        Serial.print(rxValue[1], DEC);
+        Serial.print(rxValue[2], DEC); 
+         
+        R = 255 - rxValue[0];
+        G = 255 - rxValue[1];
+        B = 255 - rxValue[2];  
+        
         Serial.println();
-          Serial.println("*********");
+        Serial.println("*********");
       }
     }
 };
@@ -85,13 +86,13 @@ class MyCallbacks: public BLECharacteristicCallbacks {
 void setup() {
   Serial.begin(115200);
 
-   ledcSetup(ledRedChannel, freq, resolution);
-   ledcSetup(ledGreenChannel, freq, resolution);
-   ledcSetup(ledBlueChannel, freq, resolution);
+  ledcSetup(redChannel, freq, resolution);
+  ledcSetup(greenChannel, freq, resolution);
+  ledcSetup(blueChannel, freq, resolution);
    
-   ledcAttachPin(RedLedPin, ledRedChannel);
-   ledcAttachPin(GreenLedPin, ledGreenChannel);
-   ledcAttachPin(BlueLedPin, ledBlueChannel);
+  ledcAttachPin(RedLedPin, redChannel);
+  ledcAttachPin(GreenLedPin, greenChannel);
+  ledcAttachPin(BlueLedPin, blueChannel);
 
   // Create the BLE Device
   BLEDevice::init("UART Service");
@@ -128,11 +129,15 @@ void setup() {
 
 void loop() {
 
+  ledcWrite(redChannel, R);
+  ledcWrite(greenChannel, G);
+  ledcWrite(blueChannel, B);
+
     if (deviceConnected) {
         pTxCharacteristic->setValue(&txValue, 1);
         pTxCharacteristic->notify();
         txValue++;
-		delay(10); // bluetooth stack will go into congestion, if too many packets are sent
+		    delay(10); // bluetooth stack will go into congestion, if too many packets are sent
 	}
 
     // disconnecting

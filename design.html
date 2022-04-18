@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script defer src="app3.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+
+        <div class="controlpanel">
+            <button class="button" id="scan">Connect to BLE</button>
+
+            <form class="console">
+                <input style="height: 30px; margin: 4px; font-size: large;"
+                    id="input"
+                    name="console" 
+                    rows="3" 
+                    cols="30"
+                    placeholder="Any text"
+                    />
+                <input style="
+                margin: 4px; 
+                height: 30px; 
+                width: 80px;
+                " 
+                type="button" 
+                value="Send"
+                onclick="sendString()"
+                >
+                <br>
+                <textarea style="margin: 4px;" id="output" class="console" rows="20" cols="50" readonly></textarea>
+            </form>
+            </textarea>
+        </div>
+
+    <div class="color">
+        <div>Choose color</div>
+        <input id="colorPicker" type="color" value="#ffffff" onchange="sendColorData()"/>
+    </div>
+    </div>
+    
+</body>
+</html>
