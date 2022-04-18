@@ -2,6 +2,8 @@ Bluetooth example using web bluetooth api.
 
 With this application you can connect your ESP32 board to Google Chrome via Bluetooth and control the color of LED by using a color picker on the web page.
 
+![alt text](https://github.com/spacewormsera/Google-chrome-Bluetooth-API-RGB-LED
+/blob/master/Screenshot_28.png?raw=true)
 
 How to use:
 
